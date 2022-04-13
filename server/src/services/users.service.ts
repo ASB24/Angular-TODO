@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { hash } from 'bcrypt';
 import DB from '@databases';
 import { CreateUserDto } from '@dtos/users.dto';
@@ -8,49 +9,46 @@ import { isEmpty } from '@utils/util';
 class UserService {
   public users = DB.Users;
 
-  public async findAllUser(): Promise<User[]> {
-    const allUser: User[] = await this.users.findAll();
-    return allUser;
-  }
-
-  public async findUserById(userId: number): Promise<User> {
-    if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
+  public async findUserById(userId: string): Promise<User> {
+    if (isEmpty(userId)) throw new HttpException(400, 'Number not provided');
 
     const findUser: User = await this.users.findByPk(userId);
-    if (!findUser) throw new HttpException(409, "You're not user");
+    if (!findUser) throw new HttpException(409, 'User not found');
 
     return findUser;
   }
 
   public async createUser(userData: CreateUserDto): Promise<User> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+    if (isEmpty(userData)) throw new HttpException(400, "User data provided incorrectly");
 
-    const findUser: User = await this.users.findOne({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
+    const findUser: User = await this.users.findOne({ where: { id: userData.id } });
+    if (findUser) throw new HttpException(409, `The user ${userData.id} already exists`);
 
-    const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = await this.users.create({ ...userData, password: hashedPassword });
+    const hashedPassword = await hash(userData.pass, 10);
+    const createUserData: User = await this.users.create({ ...userData, pass: hashedPassword });
     return createUserData;
   }
 
-  public async updateUser(userId: number, userData: CreateUserDto): Promise<User> {
-    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+  public async updateUser(userId: string, userData: CreateUserDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, "User data provided incorrectly");
 
     const findUser: User = await this.users.findByPk(userId);
-    if (!findUser) throw new HttpException(409, "You're not user");
+    if (!findUser) throw new HttpException(409, "User does not exist");
 
-    const hashedPassword = await hash(userData.password, 10);
-    await this.users.update({ ...userData, password: hashedPassword }, { where: { id: userId } });
+    const hashedPassword = await hash(userData.pass, 10);
+    await this.users.update({ ...userData, pass: hashedPassword }, { where: { id: userId } });
 
     const updateUser: User = await this.users.findByPk(userId);
+    if (!findUser) throw new HttpException(409, "User does not exist");
+
     return updateUser;
   }
 
-  public async deleteUser(userId: number): Promise<User> {
-    if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
+  public async deleteUser(userId: string): Promise<User> {
+    if (isEmpty(userId)) throw new HttpException(400, "User data provided incorrectly");
 
     const findUser: User = await this.users.findByPk(userId);
-    if (!findUser) throw new HttpException(409, "You're not user");
+    if (!findUser) throw new HttpException(409, "User does not exist");
 
     await this.users.destroy({ where: { id: userId } });
 

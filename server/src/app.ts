@@ -68,9 +68,9 @@ class App {
     const options = {
       swaggerDefinition: {
         info: {
-          title: 'REST API',
+          title: 'TODO REST API',
           version: '1.0.0',
-          description: 'Example docs',
+          description: 'ORM API',
         },
       },
       apis: ['swagger.yaml'],

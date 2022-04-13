@@ -6,22 +6,12 @@ import userService from '@services/users.service';
 class UsersController {
   public userService = new userService();
 
-  public getUsers = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const findAllUsersData: User[] = await this.userService.findAllUser();
-
-      res.status(200).json({ data: findAllUsersData, message: 'findAll' });
-    } catch (error) {
-      next(error);
-    }
-  };
-
   public getUserById = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const findOneUserData: User = await this.userService.findUserById(userId);
 
-      res.status(200).json({ data: findOneUserData, message: 'findOne' });
+      res.status(200).json({ data: findOneUserData, message: `User: ${findOneUserData.id} exists` });
     } catch (error) {
       next(error);
     }
@@ -32,7 +22,7 @@ class UsersController {
       const userData: CreateUserDto = req.body;
       const createUserData: User = await this.userService.createUser(userData);
 
-      res.status(201).json({ data: createUserData, message: 'created' });
+      res.status(201).json({ data: createUserData, message: 'User created' });
     } catch (error) {
       next(error);
     }
@@ -40,11 +30,11 @@ class UsersController {
 
   public updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const userData: CreateUserDto = req.body;
       const updateUserData: User = await this.userService.updateUser(userId, userData);
 
-      res.status(200).json({ data: updateUserData, message: 'updated' });
+      res.status(200).json({ data: updateUserData, message: `User: ${updateUserData.id} has been updated` });
     } catch (error) {
       next(error);
     }
@@ -52,10 +42,10 @@ class UsersController {
 
   public deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const deleteUserData: User = await this.userService.deleteUser(userId);
 
-      res.status(200).json({ data: deleteUserData, message: 'deleted' });
+      res.status(200).json({ data: deleteUserData, message: 'User has been deleted' });
     } catch (error) {
       next(error);
     }
