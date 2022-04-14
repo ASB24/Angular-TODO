@@ -6,6 +6,7 @@ This project was developed with the following tools:
 - NodeJS v8.5.4
 - MySQL v5.0.12
 - Express v4.17.3
+- Sequelize v6.19.0 for ORM
 
 ## Average Runtimes
 ### API setup: 4120 ms
