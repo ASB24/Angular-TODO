@@ -1,0 +1,1 @@
+ng serve --open & npm start --prefix ./server
