@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     this.api.setSessionUser("")
   }
 
-  login(){
+  logIn(){
     this.api.getUser(this.id).then( response => {
       let found : User = response.data
       if(found.id == this.id && found.pass == found.pass){
@@ -31,6 +31,23 @@ export class LoginComponent implements OnInit {
         console.log(response.message)
         this.router.navigate(['todo'])
       }
+    }).catch(err => {
+      alert("Credentials are incorrect")
+    })
+  }
+
+  signUp(){
+    this.api.getUser(this.id).then( response => {
+      alert("User already exists")
+    }).catch(err => {
+      this.api.createUser({
+        id: this.id,
+        pass: this.pass
+      }).then(response => {
+        console.log(response.message)
+        alert('User created successfully!')
+        this.router.navigate(['login'])
+      })
     })
   }
 

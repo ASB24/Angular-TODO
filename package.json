@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "concurrently \"ng serve --open\" \"npm start --prefix ./server\"",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,6 +20,7 @@
     "@angular/router": "~13.3.0",
     "axios": "^0.26.1",
     "class-validator": "^0.13.2",
+    "concurrently": "^7.1.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "validator": "^13.7.0",

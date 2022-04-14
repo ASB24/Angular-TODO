@@ -15,6 +15,9 @@ export class TodoComponent implements OnInit {
   folders : Folder[] = []
   tasks : Task[] = []
 
+  foldersToDelete : string[] = []
+  tasksToDelete : string[] = []
+
   _user : string = ""
 
   @Input() task_desc! : string
@@ -34,20 +37,41 @@ export class TodoComponent implements OnInit {
 
   constructor(private api : RequestsService, private _router : Router) {
     this._user = this.api.getSessionUser()
-    this.ngOnInit()
-  }
-
-  ngOnInit(): void {
     this.folders = []
     this.tasks = []
     this.getFolders(this._user)
+    this.tasks = this.tasks.splice(0, Math.ceil(this.tasks.length / 2) ) //First half since pre-flight populates tasks twice
   }
 
-  reloadComponent() {
-    let currentUrl = this._router.url;
-    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
-    this._router.onSameUrlNavigation = 'reload';
-    this._router.navigate([currentUrl]);
+  ngOnInit(): void {
+    
+  }
+
+  logOut(){
+    this._router.navigate(['login'])
+  }
+  saveChanges() : void{
+    for(let folder of this.folders){
+      this.api.updateFolder(folder).catch(err => {
+        console.log(err)
+      })
+    }
+    for(let task of this.tasks){
+      this.api.updateTask(task).catch(err => {
+        console.log(err)
+      })
+    }
+    for(let del_folder of this.foldersToDelete){
+      this.api.deleteFolder(del_folder).catch(err => {
+        console.log(err)
+      })
+    }
+    for(let del_task of this.tasksToDelete){
+      this.api.deleteTask(del_task).catch(err => {
+        console.log("folder deleted.")
+      })
+    }
+    alert("Changes saved successfully")
   }
 
   getFolders(id: string) : void{
@@ -71,60 +95,86 @@ export class TodoComponent implements OnInit {
   }
 
   addFolder() : void{
+
+    if(this.folder_name === "") return
+
     this.folderToCreate.user_id = this._user
     this.folderToCreate.name = this.folder_name
+
     this.api.createFolder(this.folderToCreate).then(response => {
-      this.resultFolder = response.data as Folder
+      this.folders.unshift( response.data as Folder )
       console.log(response.message)
-      this.reloadComponent()
     })
+
+    this.folder_name = ""
   }
-  addTask() : void{
-    this.taskToCreate.folder_id = Number(this.sel_folder)
+  addTask(folder_id : number) : void{
+
+    let desc : string = (<HTMLInputElement>document.getElementById(folder_id.toString())).value
+
+    if(desc === "") return
+
+    this.taskToCreate.description = desc
     this.taskToCreate.completed = false
-    this.taskToCreate.description = this.task_desc
+    this.taskToCreate.folder_id = folder_id
+
     this.api.createTask(this.taskToCreate).then(response => {
-      this.resultTask = response.data as Task
+      this.tasks.push(response.data as Task)
       console.log(response.message)
-      this.reloadComponent()
     })
+
+    let temp : HTMLInputElement = document.getElementById(folder_id.toString()) as HTMLInputElement
+    temp.value = ''
   }
 
   updateFolder(folder : Folder) : void{
-    this.folderToUpdate = folder
-    this.api.updateFolder(this.folderToUpdate).then( response => {
-      console.log(response.message)
-      this.reloadComponent()
-    } )
+
+    if(folder.name === "") return
+
+    this.folders.find((compare, index) => {
+      if(compare.id === folder.id){
+        this.folders[index] = folder
+        return
+      }
+    })
   }
   updateTask(task : Task) : void{
-    this.taskToUpdate = task
-    this.api.updateTask(this.taskToUpdate).then( response => {
-      console.log(response.message)
-      this.reloadComponent()
-    } )
+
+    if(task.description === "") return
+
+    this.tasks.find((compare, index) => {
+      if(compare.id === task.id){
+        this.tasks[index].description = (<HTMLInputElement>document.getElementById(task.id.toString())).value
+        return
+      }
+    })
   }
   updateTaskState(task : Task) : void{
-    this.taskToUpdate = task
-    this.taskToUpdate.completed = !this.taskToUpdate.completed
-    this.api.updateTask(this.taskToUpdate).then( response => {
-      console.log(response.message)
-      this.reloadComponent()
-    } )
+    this.tasks.find((compare, index) => {
+      if(compare.id === task.id){
+        console.log(compare.id)
+        this.tasks[index].completed = !this.tasks[index].completed
+        return
+      }
+    })
   }
 
-  deleteFolder(id: string) : void{
-    this.api.deleteFolder(id).then(response => {
-      this.resultFolder = response.data as Folder
-      console.log(response.message)
-      this.reloadComponent()
+  deleteFolder(id: number) : void{
+    this.folders.find((compare, index) => {
+      if( compare.id === id ){
+        this.foldersToDelete.push(compare.id.toString())
+        this.folders.splice(index,1)
+        return
+      }
     })
   }
   deleteTask(id: number) : void{
-    this.api.deleteTask(id.toString()).then(response => {
-      this.resultTask = response.data as Task
-      console.log(response.message)
-      this.reloadComponent()
+    this.tasks.find((compare, index) => {
+      if( compare.id === Number(id) ){
+        this.tasksToDelete.push(compare.id.toString())
+        this.tasks.splice(index,1)
+        return
+      }
     })
   }
 
