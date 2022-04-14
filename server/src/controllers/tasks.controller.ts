@@ -14,7 +14,7 @@ class TasksController {
       const id = String(req.params.id)
       const findAllFoldersData: Folder[] = await this.todoService.findAllFolders(id);
 
-      res.status(300).json({ data: findAllFoldersData, message: 'Folders have been fetched' });
+      res.status(200).json({ data: findAllFoldersData, message: 'Folders have been fetched' });
     } catch (error) {
       next(error);
     }
@@ -24,7 +24,7 @@ class TasksController {
       const id = Number(req.params.id)
       const findAllTasksData: Task[] = await this.todoService.findAllTasks(id);
 
-      res.status(300).json({ data: findAllTasksData, message: 'Tasks have been fetched' });
+      res.status(200).json({ data: findAllTasksData, message: 'Tasks have been fetched' });
     } catch (error) {
       next(error);
     }
@@ -35,7 +35,7 @@ class TasksController {
       const folderData: CreateFolderDtoNo = req.body;
       const createFolderData: Folder = await this.todoService.createFolder(folderData, folderData.user_id);
 
-      res.status(301).json({ data: createFolderData, message: 'Folder created successfully' });
+      res.status(200).json({ data: createFolderData, message: 'Folder created successfully' });
     } catch (error) {
       next(error);
     }
@@ -45,7 +45,7 @@ class TasksController {
       const taskData: CreateTaskDtoNo = req.body;
       const createTaskData: Task = await this.todoService.createTask(taskData);
 
-      res.status(301).json({ data: createTaskData, message: 'Task created successfully' });
+      res.status(200).json({ data: createTaskData, message: 'Task created successfully' });
     } catch (error) {
       next(error);
     }
@@ -56,7 +56,7 @@ class TasksController {
       const folderData: CreateFolderDto = req.body;
       const updateFolderData: Folder = await this.todoService.updateFolder(folderData);
 
-      res.status(300).json({ data: updateFolderData, message: `Folder: ${folderData.id} updated successfully` });
+      res.status(200).json({ data: updateFolderData, message: `Folder: ${folderData.id} updated successfully` });
     } catch (error) {
       next(error);
     }
@@ -66,7 +66,7 @@ class TasksController {
       const taskData: CreateTaskDto = req.body;
       const updateTaskData: Task = await this.todoService.updateTask(taskData);
 
-      res.status(300).json({ data: updateTaskData, message: `Task: ${taskData.id} updated successfully` });
+      res.status(200).json({ data: updateTaskData, message: `Task: ${taskData.id} updated successfully` });
     } catch (error) {
       next(error);
     }
@@ -77,7 +77,7 @@ class TasksController {
       const folderId = Number(req.params.id);
       const deleteFolderData: Folder = await this.todoService.deleteFolder(folderId);
 
-      res.status(300).json({ data: deleteFolderData, message: `${deleteFolderData.name} folder deleted successfully` });
+      res.status(200).json({ data: deleteFolderData, message: `${deleteFolderData.name} folder deleted successfully` });
     } catch (error) {
       next(error);
     }
@@ -87,7 +87,7 @@ class TasksController {
       const taskId = Number(req.params.id);
       const deleteTaskData: Task = await this.todoService.deleteTask(taskId);
 
-      res.status(300).json({ data: deleteTaskData, message: `${deleteTaskData.description} deleted successfully` });
+      res.status(200).json({ data: deleteTaskData, message: `${deleteTaskData.description} deleted successfully` });
     } catch (error) {
       next(error);
     }

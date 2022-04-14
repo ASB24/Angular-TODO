@@ -22,7 +22,7 @@ class UsersController {
       const userData: CreateUserDto = req.body;
       const createUserData: User = await this.userService.createUser(userData);
 
-      res.status(201).json({ data: createUserData, message: 'User created' });
+      res.status(200).json({ data: createUserData, message: 'User created' });
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,45 @@
 <div>
-    <form>
-        
-    </form>
+    <div>
+        <ul *ngIf="folders.length != 0">
+            <li *ngFor="let folder of folders">
+                <h2>{{folder.name}}</h2>
+                <h3>ToDo</h3>
+                <ul>
+                    <ng-container *ngFor="let task of tasks">
+                        <li *ngIf="!task.completed && task.folder_id == folder.id">
+                            <div>
+                                <input type="checkbox" [checked]="task.completed" (click)="updateTaskState(task)">
+                                <p>{{task.description}}</p>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+    
+                <h3>Completed</h3>
+                <ul>
+                    <ng-container *ngFor="let task of tasks">
+                        <li *ngIf="task.completed && task.folder_id == folder.id" >
+                            <input type="checkbox" [checked]="task.completed" (click)="updateTaskState(task)">
+                            <p>{{task.description}}</p>
+
+                        </li>
+                    </ng-container>
+                </ul>
+    
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h2>Add Task</h2>
+        <select name="folder" id="folder" [(ngModel)]="sel_folder" >
+            <option value="">Folder:</option>
+            <option *ngFor="let folder of folders" [value]="folder.id">{{folder.name}}</option>
+        </select>
+        <input type="text" value="New Task" [(ngModel)]="task_desc">
+        <button (click)="addTask()" >+</button>
+
+        <h2>Add Folder</h2>
+        <input type="text" value="New Task" [(ngModel)]="folder_name">
+        <button (click)="addFolder()" >+</button>
+    </div>
 </div>

@@ -19,6 +19,7 @@ class TasksRoute implements Routes {
     this.router.get(`${this.path}/folders/get/:id`, this.taskController.getFolders);
     this.router.get(`${this.path}/tasks/get/:id(\\d+)`, this.taskController.getTasks);
 
+
     this.router.post(`${this.path}/folders`, validationMiddleware(CreateFolderDtoNo, 'body'), this.taskController.createFolder);
     this.router.post(`${this.path}/tasks`, validationMiddleware(CreateTaskDtoNo, 'body'), this.taskController.createTask);
 
