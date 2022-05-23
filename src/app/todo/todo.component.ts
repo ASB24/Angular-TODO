@@ -53,22 +53,22 @@ export class TodoComponent implements OnInit {
   saveChanges() : void{
     for(let folder of this.folders){
       this.api.updateFolder(folder).catch(err => {
-        console.log(err)
+        
       })
     }
     for(let task of this.tasks){
       this.api.updateTask(task).catch(err => {
-        console.log(err)
+        
       })
     }
     for(let del_folder of this.foldersToDelete){
       this.api.deleteFolder(del_folder).catch(err => {
-        console.log(err)
+        
       })
     }
     for(let del_task of this.tasksToDelete){
       this.api.deleteTask(del_task).catch(err => {
-        console.log("folder deleted.")
+        
       })
     }
     alert("Changes saved successfully")
@@ -103,7 +103,7 @@ export class TodoComponent implements OnInit {
 
     this.api.createFolder(this.folderToCreate).then(response => {
       this.folders.unshift( response.data as Folder )
-      console.log(response.message)
+      
     })
 
     this.folder_name = ""
@@ -120,7 +120,7 @@ export class TodoComponent implements OnInit {
 
     this.api.createTask(this.taskToCreate).then(response => {
       this.tasks.push(response.data as Task)
-      console.log(response.message)
+      
     })
 
     let temp : HTMLInputElement = document.getElementById(folder_id.toString()) as HTMLInputElement
@@ -152,7 +152,7 @@ export class TodoComponent implements OnInit {
   updateTaskState(task : Task) : void{
     this.tasks.find((compare, index) => {
       if(compare.id === task.id){
-        console.log(compare.id)
+        
         this.tasks[index].completed = !this.tasks[index].completed
         return
       }
