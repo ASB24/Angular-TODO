@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
       let found : User = response.data
       if(found.id == this.id && found.pass == found.pass){
         this.api.setSessionUser(found.id)
-        console.log(response.message)
+        
         this.router.navigate(['todo'])
       }
     }).catch(err => {
@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
         id: this.id,
         pass: this.pass
       }).then(response => {
-        console.log(response.message)
+        
         alert('User created successfully!')
         this.router.navigate(['login'])
       })
